@@ -210,4 +210,4 @@ def Update_Client(id,name,cnic,num,ad):
     return render_template('UpdateEmployee.html',val="Client",user=session['name'],name=name,cnic=cnic,num=num,ad=ad,error=error)
 
 app.debug=True
-app.run(host="0.0.0.0")
+app.run()
