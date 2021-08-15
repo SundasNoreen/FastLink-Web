@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block body %}
+<section class="features-boxed">
+                    <div class="container">
+                        <div class="intro"; style="margin-bottom:20px">
+                            <h2 class="text-center">Update Employee Details</h2>
+                        </div>
+                        <div class="table-responsive">
+         <table  border="1" cellpadding="3" cellspacing="3" class ="table" style="text-align: center; color:black">
+            <tbody>
+               <tr>
+                  {% for row in rows %}
+               </tr>
+               <tr>
+                  <td><a style="color:black; text-decoration:none;" href="/update_{{row[0]}}_{{row[1]}}_{{row[2]}}_{{row[3]}}_{{row[4]}}">{{row[1]}}</a></td>
+               </tr>
+               {% endfor %}
+            </tbody>
+            <tbody>
+         </table>
+      </div>
+                    </div>
+                </section>
+
+{% endblock %}

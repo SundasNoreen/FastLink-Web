@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+     <title>FastLink</title>
+      <link rel="icon" type="image/png" href="static/img/logo.jpeg"/>
+    <link rel="stylesheet" href="static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/fonts/ionicons.min.css">
+    <link rel="stylesheet" href="static/css/Login-Form-Clean.css">
+</head>
+<body>
+    <section class="login-clean">
+        <form method="post">
+            <h2 class="visually-hidden">Login Form</h2>
+            <div class="illustration"><i class="icon ion-ios-locked-outline"></i></div>
+            <div class="mb-3"><input type="text" class="form-control" name="username" id="username" placeholder="UserName" value="{{ request.form.username }}" required/></div>
+            <div class="mb-3"><input type="password" class="form-control" id="password" name="password" placeholder="Password" value="{{ request.form.password }}" required /></div>
+             <div class="forgot"><center><input class="checkmark" type="checkbox" onclick="myFunction()">  Show Password</center></div>
+             <div class="mb-3"><button class="btn btn-primary d-block w-100" type="submit">Log In</button></div>
+            <a class="forgot" href="/forget_password">Forgot Password.</a></form>
+          {% if error %}
+         <p class="error">
+            <strong>
+         <center> {{ error }}</center></strong>
+         {% endif %}
+    </section>
+      <script>
+function myFunction() {
+  var x = document.getElementById("password");
+  if (x.type === "text") {
+  x.type = "password";
+
+  } else {
+    x.type = "text";
+  }
+}
+</script>
+    <script src="static/bootstrap/js/bootstrap.min.js"></script>
+</body>
+
+</html>
