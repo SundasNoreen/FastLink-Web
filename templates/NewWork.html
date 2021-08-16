@@ -1,0 +1,77 @@
+<style>
+.form-header
+{
+margin-top:30px;}
+   .form-header h3
+   {
+   margin-top: 15px;  text-align: center; margin-bottom: 15px;
+   }
+   .form-header label
+   {
+   margin-top: 10px; margin-bottom: 10px; text-align: center;
+   }
+   .category {
+   width:100%;
+   margin-bottom: 15px;
+   height: 30px;
+   border: 1px solid lightgrey;
+   }
+   .wrap{
+   width: 600px; margin: 0 auto; border: 3px solid grey; padding: 2rem; background:#F8F8FF;
+   }
+   @media only screen and (max-width: 767px) {
+   .wrap{
+   width:300px;
+   border: 2px solid grey;
+   padding: 1rem;}
+   }
+   .wrap p{
+   margin-top: 5px;
+   color: black;
+   text-align: center;
+   }
+</style>
+{% extends "layout.html" %}
+{% block body %}
+<section class="features-boxed">
+  <div class="container">
+                   <div class="intro">
+                            <h2 class="text-center">New Work</h2>
+                        </div>
+   </div>
+   <div class="form-header">
+      <form action = "" class="wrap"  method = "post">
+         <label>Client Name</label><br>
+          <select name="client" class="category" method="GET" required>
+    {% for row in rows %}
+        <option value="{{row[0]}}" SELECTED>{{row[1]}}</option>"
+    {% endfor %}
+</select>
+
+          <label>Employee Working</label><br>
+  <select name="employee" class="category" method="GET" required>
+    {% for col in cols %}
+        <option value="{{col[0]}}" SELECTED>{{col[1]}}</option>"
+    {% endfor %}
+</select>
+          <label>Date</label><br>
+         <input type="date" class="category" name="date" max="{{d1}}" required/><br>
+          <label>Name of Items taken from Store</label><br>
+<input type="text" class="form-control" name="store" id="store"  value="{{ request.form.store }}" />
+          <label>Name of Items Purchased</label><br>
+<input type="text" class="form-control" name="pur" id="pur"  value="{{ request.form.pur }}"/>
+          <label>Consolidated Price of Items Purchased</label><br>
+<input type="number" class="form-control" name="amount" id="amount"  value="{{ request.form.amount }}" />
+           <label>Consolidated Amount to be payed by Client</label><br>
+<input type="number" class="form-control" name="cli" id="cli"  value="{{ request.form.cli }}" required/>
+         <br>
+          <button class="btn btn-primary d-block w-100" style="background-color: darkseagreen; margin-bottom: 10px;" type="submit">Add Work</button>
+         {% if error %}
+         <p class="error">
+            <strong>
+         <center> {{ error }}</center></strong>
+         {% endif %}
+      </form>
+   </div>
+</section>
+{% endblock %}

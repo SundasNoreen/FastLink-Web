@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block body %}
+<section class="features-boxed">
+   <div class="container">
+      <div class="intro">
+         <h2 class="text-center">Work History</h2>
+      </div>
+      <div class="table-responsive">
+         <table  border="1" cellpadding="3" cellspacing="3" class ="table" style="text-align: center; color:black">
+            <tbody>
+               <tr style="background-color: darkseagreen; font-weight: bold;border-bottom: 1px solid">
+                  <strong>
+                     <td>Client Name</td>
+                     <td>Employee Name</td>
+                     <td>Date</td>
+                     <td>Items from Store</td>
+                     <td>Items Purchased</td>
+                     <td>Purchasing Amount</td>
+                     <td>Total Bill to be payed by Client</td>
+                  </strong>
+               </tr>
+               <tr>
+                  {% for Store,Purchased in rows %}
+               </tr>
+               <tr>
+                  <td>{{Store}}</td>
+                  <td>{{Purchased}}</td>
+               </tr>
+               {% endfor %}
+            </tbody>
+            <tbody>
+         </table>
+      </div>
+   </div>
+</section>
+{% endblock %}
