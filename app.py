@@ -606,5 +606,5 @@ def Password():
         conn.close()
     return render_template('password.html', error=error, user=session['name'])
 
-app.debug=True
-app.run()
+if __name__ == '__main__':
+    app.run(debug=True)
