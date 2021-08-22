@@ -833,5 +833,6 @@ def Bill_Employee(month,mon):
         conn.close()
     values=zip(Client,Amount)
     return render_template('CLient_Bill.html',na="Employee",month=mon,user=session['name'],rows=values)
-app.debug=True
-app.run()
+
+if __name__ == "__main__":
+    app.run(debug=True)
