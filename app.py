@@ -10,7 +10,7 @@ def database():
     return db
 
 app = Flask(__name__)
-app.secret_key = 'sundas'
+app.secret_key = 'FastLink'
 
 @app.before_request
 def Session_Timeout():
@@ -217,11 +217,6 @@ def Update_Client(id,name,cnic,num,ad):
         finally:
             conn.close()
     return render_template('UpdateEmployee.html',val="Client",user=session['name'],name=name,cnic=cnic,num=num,ad=ad,error=error)
-
-@app.route('/work')
-@login_required
-def Work():
-    return render_template('Work.html',user=session['name'])
 
 @app.route('/new_work', methods=['GET', 'POST'])
 @login_required
@@ -481,7 +476,7 @@ def ID_Cl(id,name):
     info = zip(Client, Store, Purchased, Amount, Bill, Date)
     return render_template('Single.html',Name=name,val="Employee",user=session['name'],rows=info,name=name,error=error)
 
-@app.route('/work_history',methods=['GET', 'POST'])
+@app.route('/work_details_monthly',methods=['GET', 'POST'])
 @login_required
 def History():
     Store=[]
@@ -543,36 +538,83 @@ def History():
         return redirect(url_for('Details',month=months,mon=mon))
     return render_template('Select_Month.html',user=session['name'],rows=info)
 
-@app.route('/settings')
+@app.route('/work_details_daily',methods=['GET', 'POST'])
 @login_required
-def Settings():
-    return render_template('settings.html',user=session['name'])
-
-@app.route('/admins')
-@login_required
-def Admins():
-    cat=session['category']
-    if cat=="Main":
-        return redirect(url_for('Admins_Det'))
-    else:
-        return render_template('Message.html')
-    return render_template('settings.html',user=session['name'])
-
-@app.route('/admins_details')
-@login_required
-def Admins_Det():
+def Daily():
+    Store=[]
+    Values=[]
+    mon=''
     rows = ''
     conn = database()
     cursor = conn.cursor()
-    sql = 'SELECT * FROM `admins` ORDER BY `Name`'
+    sql='SELECT * FROM `work` ORDER BY `Date` DESC'
+    sql1 = 'SELECT * FROM `work` ORDER BY `Date` ASC'
     try:
         cursor.execute(sql)
         rows = cursor.fetchall()
+        for row in rows:
+            d1=row[7]
+            break
+        cursor.execute(sql1)
+        cols = cursor.fetchall()
+        for col in cols:
+            d2 = col[7]
+            break
     except:
         error = " Unable to fetch data."
     finally:
         conn.close()
-    return render_template('Admins.html', user=session['name'], rows=rows)
+    if request.method=='POST':
+        da=request.form['date']
+        return redirect(url_for('Date_Wise',da=da))
+    return render_template('Daily.html',user=session['name'],d1=d1,d2=d2)
+
+@app.route('/monthly_<da>')
+@login_required
+def Date_Wise(da):
+    Store=[]
+    Sum=0
+    Pur=0
+    Purchased=[]
+    Amount = []
+    Bill = []
+    Date=[]
+    Empl=[]
+    Employee=[]
+    Client=[]
+    rows = ''
+    conn = database()
+    cursor = conn.cursor()
+    sql = 'SELECT * FROM `work` WHERE `Date`=%s'
+    try:
+        cursor.execute(sql,(da))
+        rows = cursor.fetchall()
+        for i in rows:
+            Store.append(i[3])
+            Purchased.append(i[4])
+            Amount.append(i[5])
+            Bill.append(i[6])
+            Date.append(i[7])
+            sql1 = 'SELECT `Name` FROM `employee` WHERE `ID`=%s'
+            cursor.execute(sql1, (i[2]))
+            val = cursor.fetchall()
+            for a in val:
+                Employee.append(a[0])
+            sql2 = 'SELECT `Name` FROM `client` WHERE `ID`=%s'
+            cursor.execute(sql2, (i[1]))
+            val2 = cursor.fetchall()
+            for a in val2:
+                Client.append(a[0])
+    except:
+        error = " Unable to fetch data."
+    finally:
+        conn.close()
+    for i in Bill:
+        Sum=Sum+i
+    for i in Amount:
+        Pur=Pur+i
+    values=zip(Employee,Client,Store,Purchased,Amount,Bill,Date)
+    return render_template('WorkHistory.html',mon=da,Pur=Pur,user=session['name'],rows=values,Sum=Sum)
 
 @app.route('/password', methods=['GET', 'POST'])
 @login_required
@@ -606,5 +648,190 @@ def Password():
         conn.close()
     return render_template('password.html', error=error, user=session['name'])
 
-if __name__ == '__main__':
-    app.run(debug=True)
+@app.route('/generate_monthly_bill')
+@login_required
+def Options_Bill():
+    return render_template('Options.html')
+
+@app.route('/update_balance')
+@login_required
+def Options_Balance():
+    return render_template('Balance Options.html')
+
+@app.route('/monthly_bill_client', methods=['GET', 'POST'])
+@login_required
+def cl_mo_bill():
+    Store=[]
+    Values=[]
+    mon=''
+    rows = ''
+    conn = database()
+    cursor = conn.cursor()
+    sql='SELECT * FROM `work` ORDER BY `Date` DESC'
+    try:
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+        for i in rows:
+            a=str(i[7])
+            year,mo,date1=a.split('-')
+            if mo=='01':
+                month="January"
+            elif mo=='02':
+                month="February"
+            elif mo=='03':
+                month="March"
+            elif mo=='04':
+                month="April"
+            elif mo=='05':
+                month="May"
+            elif mo == '06':
+                month = "June"
+            elif mo == '07':
+                month = "July"
+            elif mo == '08':
+                month = "August"
+            elif mo == '09':
+                month = "September"
+            elif mo == '10':
+                month = "October"
+            elif mo == '11':
+                month = "November"
+            else:
+                month="December"
+            vals=month+" "+year
+            if vals in Store:
+                pass
+            else:
+                Store.append(vals)
+                Values.append(year+"-"+mo)
+    except:
+        error = " Unable to fetch data."
+    finally:
+        conn.close()
+    info=zip(Store,Values)
+    if request.method=='POST':
+        months=request.form['month']
+        return redirect(url_for('Bill_Client',month=months,mon=vals))
+    return render_template('Select_Month.html',user=session['name'],rows=info)
+
+@app.route('/client_bill_<month>_<mon>')
+@login_required
+def Bill_Client(month,mon):
+    Amount = []
+    Client=[]
+    conn = database()
+    cursor = conn.cursor()
+    sql1 = 'SELECT * FROM `client`'
+    cursor.execute(sql1)
+    val = cursor.fetchall()
+    try:
+        for k in val:
+            amount=0
+            Client.append(k[1])
+            sql = 'SELECT * FROM `work` WHERE `Client`=%s ORDER BY `Date` DESC'
+            cursor.execute(sql,k[0])
+            names = cursor.fetchall()
+            for i in names:
+                a = str(i[7])
+                year, mo, date1 = a.split('-')
+                m = year + "-" + mo
+                if m == month:
+                    for j in names:
+                        amount=amount+j[6]
+                    Amount.append(amount)
+    except:
+        error = " Unable to fetch data."
+    finally:
+        conn.close()
+    values=zip(Client,Amount)
+    return render_template('CLient_Bill.html',na="Client",month=mon,user=session['name'],rows=values)
+
+@app.route('/monthly_bill_employee', methods=['GET', 'POST'])
+@login_required
+def emp_mo_bill():
+    Store=[]
+    Values=[]
+    mon=''
+    rows = ''
+    conn = database()
+    cursor = conn.cursor()
+    sql='SELECT * FROM `work` ORDER BY `Date` DESC'
+    try:
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+        for i in rows:
+            a=str(i[7])
+            year,mo,date1=a.split('-')
+            if mo=='01':
+                month="January"
+            elif mo=='02':
+                month="February"
+            elif mo=='03':
+                month="March"
+            elif mo=='04':
+                month="April"
+            elif mo=='05':
+                month="May"
+            elif mo == '06':
+                month = "June"
+            elif mo == '07':
+                month = "July"
+            elif mo == '08':
+                month = "August"
+            elif mo == '09':
+                month = "September"
+            elif mo == '10':
+                month = "October"
+            elif mo == '11':
+                month = "November"
+            else:
+                month="December"
+            vals=month+" "+year
+            if vals in Store:
+                pass
+            else:
+                Store.append(vals)
+                Values.append(year+"-"+mo)
+    except:
+        error = " Unable to fetch data."
+    finally:
+        conn.close()
+    info=zip(Store,Values)
+    if request.method=='POST':
+        months=request.form['month']
+        return redirect(url_for('Bill_Employee',month=months,mon=vals))
+    return render_template('Select_Month.html',user=session['name'],rows=info)
+
+@app.route('/employee_bill_<month>_<mon>')
+@login_required
+def Bill_Employee(month,mon):
+    Amount = []
+    Client=[]
+    conn = database()
+    cursor = conn.cursor()
+    sql1 = 'SELECT * FROM `employee`'
+    cursor.execute(sql1)
+    val = cursor.fetchall()
+    try:
+        for k in val:
+            amount=0
+            Client.append(k[1])
+            sql = 'SELECT * FROM `work` WHERE `Employee`=%s ORDER BY `Date` DESC'
+            cursor.execute(sql,k[0])
+            names = cursor.fetchall()
+            for i in names:
+                a = str(i[7])
+                year, mo, date1 = a.split('-')
+                m = year + "-" + mo
+                if m == month:
+                    for j in names:
+                        amount=amount+j[6]
+                    Amount.append(amount)
+    except:
+        error = " Unable to fetch data."
+    finally:
+        conn.close()
+    values=zip(Client,Amount)
+    return render_template('CLient_Bill.html',na="Employee",month=mon,user=session['name'],rows=values)
+app.debug=True
+app.run()

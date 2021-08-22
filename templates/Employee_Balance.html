@@ -3,7 +3,7 @@
 <section class="features-boxed">
    <div class="container">
       <div class="intro">
-         <h2 class="text-center">Employee Balance</h2>
+         <h2 class="text-center">Update Employee Balance</h2>
       </div>
       <div class="table-responsive">
          <table  border="1" cellpadding="3" cellspacing="3" class ="table" style="text-align: center; color:black">
@@ -12,7 +12,7 @@
                   <strong>
                      <td>Employee Name</td>
                      <td>Total Pending Balance</td>
-                     <td>Let's Pay</td>
+                     <td>Update</td>
                   </strong>
                </tr>
                <tr>
@@ -21,7 +21,7 @@
                <tr>
                   <td>{{row[1]}}</td>
                   <td>{{row[5]}}</td>
-                  <td><a style="color:darkseagreen; text-decoration:none;" href="pay_emp_{{row[0]}}_{{row[5]}}_{{row[1]}}">Let's Pay</a></td>
+                  <td><a style="color:darkseagreen; text-decoration:none;" href="pay_emp_{{row[0]}}_{{row[5]}}_{{row[1]}}">Update</a></td>
                </tr>
                {% endfor %}
             </tbody>

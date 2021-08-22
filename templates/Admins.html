@@ -1,43 +1,112 @@
+<style>
+.form-header
+{
+margin-top:30px;}
+   .form-header h3
+   {
+   margin-top: 15px;  text-align: center; margin-bottom: 15px;
+   }
+   .form-header label
+   {
+   margin-top: 10px; margin-bottom: 10px; text-align: center;
+   }
+
+   .category {
+   width:100%;
+   margin-bottom: 15px;
+   height: 30px;
+   margin-right:5px;
+   border: 1px solid lightgrey;
+   }
+   .det option
+{
+margin-right:5px;
+}
+   .your-class input{
+  display:table; margin-right:5px;
+}
+.det
+{
+display: table-cell
+}
+   .wrap{
+   width: 1000px; margin: 0 auto; border: 3px solid grey; padding: 2rem; background:#F8F8FF;
+   }
+   @media only screen and (max-width: 767px) {
+   .wrap{
+   width:300px;
+   border: 2px solid grey;
+   padding: 1rem;}
+   }
+   .wrap p{
+   margin-top: 5px;
+   color: black;
+   text-align: center;
+   }
+</style>
 {% extends "layout.html" %}
 {% block body %}
 <section class="features-boxed">
-   <div class="container">
-      <div class="intro">
-         <h2 class="text-center">Admins</h2>
-      </div>
-      <!--                        <div class="row justify-content-center features">-->
-      <!--                            <div class="col-sm-6 col-md-5 col-lg-4 item">-->
-      <!--                                <div class="box">-->
-      <!--                                    <h3 class="name"><a style="color:black; text-decoration:none;" href="/add_{{val}}">Add Admin-->
-      <!--                                       </a></h3>-->
-      <!--                                </div>-->
-      <!--                            </div>-->
-      <!--                        </div>-->
-      <div class="table-responsive">
-         <table  border="1" cellpadding="3" cellspacing="3" class ="table" style="text-align: center; color:black">
-            <tbody>
-               <tr style="background-color: darkseagreen; font-weight: bold;border-bottom: 1px solid">
-                  <strong>
-                     <td>Category</td>
-                     <td>Name</td>
-                     <td>Username</td>
-                     <td>Email</td>
-                  </strong>
-               </tr>
-               <tr>
-                  {% for row in rows %}
-               </tr>
-               <tr>
-                  <td>{{row[0]}}</td>
-                  <td>{{row[1]}}</td>
-                  <td>{{row[2]}}</td>
-                  <td>{{row[4]}}</td>
-               </tr>
-               {% endfor %}
-            </tbody>
-            <tbody>
-         </table>
-      </div>
+   <script>
+
+var num = prompt("Please Enter Number of Clients You Handled Today: ", "");
+if (num!= null) {
+    document.getElementById("welcome").innerHTML =
+    "Hello " + customerName + "! How are you today?";
+}
+
+
+
+</script>
+  <div class="container">
+                   <div class="intro">
+                            <h2 class="text-center">New Work</h2>
+                        </div>
+   </div>
+    <div class="form-header">
+      <form action = "" class="wrap"  method = "post">
+
+          <label>Date</label><br>
+         <input type="date" class="category" name="date" max="{{d1}}" required/><br>
+      </form>
+   </div>
+   <div class="form-header">
+      <form action = "" class="wrap"  method = "post">
+          {% for i in num %}
+         <div class="your-class">
+             <div class="det">
+          <select name="client" class="category"  method="GET" required>
+               <option value="" disabled selected>Client</option>"
+    {% for row in rows %}
+        <option value="{{row[0]}}" >{{row[1]}}</option>"
+    {% endfor %}
+</select></div>
+<div class="det" style="margin-right:5px;">
+  <select  name="employee" class="category" method="GET" required>
+      <option  value="" disabled selected>Employee</option>"
+    {% for col in cols %}
+        <option style="margin-right:5px;" value="{{col[0]}}">{{col[1]}}</option>"
+    {% endfor %}
+  </select></div>
+           <div class="det">
+<input type="text" class="form" name="store" id="store" placeholder="Items from Store"  value="{{ request.form.store }}" />
+           </div>  <div class="det">
+            <input type="text" class="form" name="pur" id="pur" placeholder="Items Purchased" value="{{ request.form.pur }}"/></div>
+  <div class="det">
+     <input type="number" class="form" name="amount" id="amount" placeholder="Purchasing Price"  value="{{ request.form.amount }}" /></div>
+        <div class="det">
+           <input type="number" class="form" name="cli" id="cli" placeholder="Bill (Spent+Profit)"   value="{{ request.form.cli }}" required/></div>
+         </div>
+         <br>
+          <button class="btn btn-primary d-block w-100" style="background-color: darkseagreen; margin-bottom: 10px;" type="submit">Add Work</button>
+
+         {% if error %}
+         <p class="error">
+            <strong>
+         <center> {{ error }}</center></strong>
+         {% endif %}
+      </form>
+       {% endfor %}
    </div>
 </section>
 {% endblock %}

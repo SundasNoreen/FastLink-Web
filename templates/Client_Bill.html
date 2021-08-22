@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+{% block body %}
+<style>
+@media print {
+  .navbar{
+  display:none;}
+  body {
+font: 12pt, "Calibri", Times, serif;
+line-height: 1.3;
+}
+.intro h3
+{
+margin-top:15px;
+font-size:15pt;}
+@page{
+margin: 4cm;
+}
+  .intro h6{
+  display:none;}}
+.btn{
+    margin-bottom:10px;
+    background:white;
+    color:black;
+    border:white;
+    }
+.btn:hover{
+background:white;
+    color:darkseagreen;
+    }
+
+</style>
+<section class="features-boxed">
+                    <div class="container">
+                        <div class="intro">
+                            <h3 class="text-center">{{na}} Bills {{month}}</h3>
+                            <button class ='btn btn-primary d-block w-100' onclick='window.print();'><h6>Print {{na}} Monthly Bill</h6></button>
+                        </div>
+                        <div class="table-responsive">
+         <table  border="1" cellpadding="3" cellspacing="3" class ="table" style="text-align: center; color:black">
+            <tbody>
+               <tr style="background-color: darkseagreen; font-weight: bold;border-bottom: 1px solid">
+                  <strong>
+                     <td>{{na}} Name</td>
+                     <td>Month</td>
+                     <td>Total Bill</td>
+                  </strong>
+               </tr>
+               <tr>
+                  {% for Client,Amount in rows %}
+               </tr>
+               <tr>
+                   <td>{{Client}}</td>
+                  <td>{{month}}</td>
+                  <td>{{Amount}}</td>
+               </tr>
+               {% endfor %}
+            </tbody>
+            <tbody>
+         </table>
+      </div>
+                    </div>
+                </section>
+
+{% endblock %}
