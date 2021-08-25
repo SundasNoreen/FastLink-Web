@@ -10,6 +10,7 @@ def database():
     return db
 
 app = Flask(__name__)
+
 app.secret_key = 'FastLink'
 
 @app.before_request
@@ -744,7 +745,7 @@ def Bill_Client(month,mon):
     finally:
         conn.close()
     values=zip(Client,Amount)
-    return render_template('Bill.html',na="Client",month=mon,user=session['name'],rows=values)
+    return render_template('CLient_Bill.html',na="Client",month=mon,user=session['name'],rows=values)
 
 @app.route('/monthly_bill_employee', methods=['GET', 'POST'])
 @login_required
@@ -832,7 +833,7 @@ def Bill_Employee(month,mon):
     finally:
         conn.close()
     values=zip(Client,Amount)
-    return render_template('Bill.html',na="Employee",month=mon,user=session['name'],rows=values)
+    return render_template('CLient_Bill.html',na="Employee",month=mon,user=session['name'],rows=values)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+	app.run(debug=True)
